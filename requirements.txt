@@ -1,3 +1,4 @@
 python==3.11.3
 jupyter
 ipykernel
+notebook
