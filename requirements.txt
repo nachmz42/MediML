@@ -12,3 +12,4 @@ scipy
 # To balance classes with SMOTE
 imblearn
 scikit-learn
+pytest

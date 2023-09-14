@@ -31,3 +31,11 @@ reset_local_files:
 	mkdir ${ML_DIR}/training_outputs/metrics
 	mkdir ${ML_DIR}/training_outputs/pipelines
 	mkdir ${ML_DIR}/training_outputs/params
+
+################### TESTS ####################
+
+tests_ml_logic:
+	@pytest tests/ml_logic/test_pipeline.py -v
+
+tests_all:
+	make tests_ml_logic
