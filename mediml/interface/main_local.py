@@ -6,7 +6,7 @@ from colorama import Fore, Style
 from sklearn.model_selection import train_test_split
 
 from mediml.ml_logic.pipeline import build_pipeline
-from mediml.ml_logic.registry import load_pipeline, save_pipeline
+from mediml.ml_logic.registry import load_pipeline, save_pipeline, save_results
 from mediml.params import COLUMN_NAMES_RAW
 
 
@@ -53,6 +53,9 @@ def preprocess_and_train() -> None:
 
     # Save pipeline
     save_pipeline(pipeline=pipeline)
+
+    # Save metrics
+    save_results(metrics={"accuracy": acurracy})
 
 
 def pred(X_pred: pd.DataFrame) -> np.ndarray:

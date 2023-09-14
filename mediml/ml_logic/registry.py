@@ -61,3 +61,20 @@ def save_pipeline(pipeline: Pipeline) -> None:
     print("✅ Pipeline saved locally")
 
     return None
+
+
+def save_results(metrics: dict) -> None:
+    """
+    Persist metrics locally on the hard drive at
+    "{LOCAL_REGISTRY_PATH}/metrics/{current_timestamp}.pickle"
+    """
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+
+    # Save metrics locally
+    if metrics is not None:
+        metrics_path = os.path.join(
+            LOCAL_REGISTRY_PATH, "metrics", timestamp + ".pickle")
+        with open(metrics_path, "wb") as file:
+            pickle.dump(metrics, file)
+
+    print("✅ Results saved locally")
