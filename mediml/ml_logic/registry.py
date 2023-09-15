@@ -7,8 +7,8 @@ from colorama import Fore, Style
 from google.cloud import storage
 from imblearn.pipeline import Pipeline
 
-from mediml.params import (BUCKET_NAME, LOCAL_REGISTRY_PATH, MODEL_TARGET,
-                           PIPELINE_DIRECTORY)
+from mediml.params import (BUCKET_NAME, LOCAL_REGISTRY_PATH,
+                           PIPELINE_DIRECTORY, PIPELINE_TARGET)
 
 
 def load_pipeline() -> Pipeline | None:
@@ -18,7 +18,7 @@ def load_pipeline() -> Pipeline | None:
     - on GCS (latest one by timestamp), raise Exception if no pipeline is found
     """
 
-    if MODEL_TARGET == "local":
+    if PIPELINE_TARGET == "local":
         print(Fore.BLUE + f"\nLoad latest pipeline from local registry..."
               + Style.RESET_ALL)
 
@@ -46,7 +46,7 @@ def load_pipeline() -> Pipeline | None:
 
         return latest_pipeline
 
-    if MODEL_TARGET == "gcs":
+    if PIPELINE_TARGET == "gcs":
         print(Fore.BLUE + f"\nLoad latest pipeline from GCS..." + Style.RESET_ALL)
 
         client = storage.Client()
@@ -92,7 +92,7 @@ def save_pipeline(pipeline: Pipeline) -> None:
 
     print("✅ Pipeline saved locally")
 
-    if MODEL_TARGET == "gcs":
+    if PIPELINE_TARGET == "gcs":
         # e.g. "20230208-161047.pkl" for instance
         pipeline_filename = pipeline_path.split("/")[-1]
         client = storage.Client()

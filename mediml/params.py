@@ -1,7 +1,7 @@
 import os
 
 ##################  VARIABLES  ##################
-MODEL_TARGET = os.environ.get("MODEL_TARGET")
+PIPELINE_TARGET = os.environ.get("PIPELINE_TARGET")
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
 
