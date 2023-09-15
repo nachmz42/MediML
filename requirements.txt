@@ -15,3 +15,5 @@ scikit-learn
 pytest
 # GCP
 google-cloud-storage
+google-cloud-bigquery
+db-dtypes # For BigQuery to convert pandas dtypes to BigQuery dtypes
