@@ -10,13 +10,17 @@ from mediml.ml_logic.registry import load_pipeline, save_pipeline, save_results
 from mediml.params import COLUMN_NAMES_RAW
 
 
-def preprocess_and_train() -> None:
+def preprocess_train_and_evaluate() -> None:
     """
     - Load raw data from local repository
     - Clean and preprocess data
     - Train a Random Forest Classifier
     - Save the pipeline locally
+    - Evaluate the model on the test set
     """
+
+    print(Fore.MAGENTA +
+          "\n ⭐️ Use case: preprocess, train and evaluate" + Style.RESET_ALL)
 
     # Load raw data from local repository
     data_path = Path("raw_data/healthcare-dataset-stroke-data.csv")
@@ -58,13 +62,21 @@ def preprocess_and_train() -> None:
     save_results(metrics={"accuracy": acurracy})
 
 
-def pred(X_pred: pd.DataFrame) -> np.ndarray:
+def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     '''
     - Load latest pipeline from local registry
     - Make predictions on new data
     Return predictions as a numpy array
     '''
     print(Fore.MAGENTA + "\n ⭐️ Use case: pred" + Style.RESET_ALL)
+
+    if X_pred is None:
+        X_pred = pd.DataFrame([['Male',
+                                80.0, 0, 0,
+                                'Yes', 'Govt_job',
+                                'Urban', 148.72, 28.7,
+                                'never smoked']],
+                              columns=COLUMN_NAMES_RAW)
 
     pipeline = load_pipeline()
     y_pred = pipeline.predict(X_pred)
@@ -80,8 +92,7 @@ def pred(X_pred: pd.DataFrame) -> np.ndarray:
 if __name__ == '__main__':
     try:
         # preprocess_and_train()
-        pred(pd.DataFrame([['Male', 80.0, 0, 0, 'Yes', 'Govt_job', 'Urban', 148.72, 28.7,
-                           'never smoked']], columns=COLUMN_NAMES_RAW))
+        pred()
     except:
         import sys
         import traceback
