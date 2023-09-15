@@ -49,3 +49,13 @@ tests_ml_logic:
 	@pytest tests/ml_logic/test_pipeline.py -v
 
 tests_all: tests_ml_logic
+
+################### GCP ####################
+
+copy_app_to_compute_engine:
+	@echo "Copying app to compute engine"
+	@gcloud compute scp --recurse . $USER@${VM_NAME}:~/mediml-project
+
+connect_to_compute_engine:
+	@echo "Connecting to compute engine"
+	@gcloud compute ssh ${VM_NAME}
