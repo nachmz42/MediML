@@ -30,7 +30,7 @@ make reinstall_package
 make reset_local_files
 ```
 
-3. Download the data [Stroke Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset), create a `raw_data` folder and put the CSV file inside.
+3. Download the data [Stroke Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset), create a `raw_data` folder and put the CSV file inside. Make sure to call the file `healthcare-dataset-stroke-data.csv`
 
 4. Run the following command inside the directory (comment or uncomment the last lines of `main_local.py` whether you want to train the model or to make a prediction)
 

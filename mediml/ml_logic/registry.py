@@ -4,61 +4,112 @@ import pickle
 import time
 
 from colorama import Fore, Style
+from google.cloud import storage
 from imblearn.pipeline import Pipeline
 
-from mediml.params import LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY
+from mediml.environments import PipelineTarget, get_pipeline_target
+from mediml.params import BUCKET_NAME, LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY
 
 
 def load_pipeline() -> Pipeline:
     """
     Return a saved pipeline:
-    - locally (latest one in alphabetical order)
-
-    Raise FileNotFoundError if no pipeline is found
+    - locally (latest one in alphabetical order), raise FileNotFoundError if no pipeline is found
+    - on GCS (latest one by timestamp), raise Exception if no pipeline is found
     """
 
-    print(Fore.BLUE + f"\nLoad latest pipeline from local registry..."
-          + Style.RESET_ALL)
+    pipeline_target = get_pipeline_target()
 
-    # Get the latest pipeline version name by the timestamp on disk
-    local_pipeline_directory = os.path.join(
-        LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY)
-    local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
+    match pipeline_target:
+        case PipelineTarget.local:
+            print(Fore.BLUE + f"\nLoad latest pipeline from local registry..."
+                  + Style.RESET_ALL)
 
-    if not local_pipeline_paths:
-        print(Fore.YELLOW +
-              f"⚠️ No pipeline found in {local_pipeline_directory}"
-              + Style.RESET_ALL)
-        raise FileNotFoundError
+            # Get the latest pipeline version name by the timestamp on disk
+            local_pipeline_directory = os.path.join(
+                LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY)
+            local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
 
-    most_recent_pipeline_path_on_disk = sorted(local_pipeline_paths)[-1]
+            if not local_pipeline_paths:
+                print(Fore.YELLOW +
+                      f"⚠️ No pipeline found in {local_pipeline_directory}"
+                      + Style.RESET_ALL)
+                raise FileNotFoundError
 
-    print(f"✅ Pipeline found at {most_recent_pipeline_path_on_disk}")
+            most_recent_pipeline_path_on_disk = sorted(
+                local_pipeline_paths)[-1]
 
-    print(Fore.BLUE + f"\nLoad latest pipeline from disk..." + Style.RESET_ALL)
+            print(f"✅ Pipeline found at {most_recent_pipeline_path_on_disk}")
 
-    latest_pipeline = pickle.load(
-        open(most_recent_pipeline_path_on_disk, "rb"))
+            print(Fore.BLUE + f"\nLoad latest pipeline from disk..." + Style.RESET_ALL)
 
-    print("✅ Pipeline loaded from local disk")
+            latest_pipeline = pickle.load(
+                open(most_recent_pipeline_path_on_disk, "rb"))
 
-    return latest_pipeline
+            print("✅ Pipeline loaded from local disk")
+
+            return latest_pipeline
+
+        case PipelineTarget.gcs:
+            print(Fore.BLUE + f"\nLoad latest pipeline from GCS..." + Style.RESET_ALL)
+
+            client = storage.Client()
+            blobs = list(client.get_bucket(
+                BUCKET_NAME).list_blobs(prefix=PIPELINE_DIRECTORY))
+
+            try:
+                latest_blob = max(blobs, key=lambda x: x.updated)
+                latest_pipeline_path_to_save = os.path.join(
+                    LOCAL_REGISTRY_PATH, latest_blob.name)
+                latest_blob.download_to_filename(latest_pipeline_path_to_save)
+
+                latest_pipeline = pickle.load(
+                    open(latest_pipeline_path_to_save, "rb"))
+
+                print(
+                    f"✅ Latest pipeline found at {latest_pipeline_path_to_save}")
+
+                print("✅ Latest pipeline downloaded from cloud storage")
+
+                return latest_pipeline
+            except:
+                print(f"\n❌ No pipeline found in GCS bucket {BUCKET_NAME}")
+                raise Exception("No pipeline found in GCS bucket")
+
+        case _:
+            raise ValueError(
+                "PIPELINE_TARGET environment variable must be set to 'local' or 'gcs'")
 
 
 def save_pipeline(pipeline: Pipeline) -> None:
     """
-    Persist trained pipeline locally on the hard drive at
-    f"{LOCAL_REGISTRY_PATH}/pipelines/{timestamp}.pkl"
+    Persist trained pipeline
+    - Locally at "{LOCAL_REGISTRY_PATH}/pipelines/{current_timestamp}.pkl"
+    - on GCS at "{BUCKET_NAME}/pipelines/{current_timestamp}.pkl"
     """
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")  # e.g. 20210824-154952
 
     # Save pipeline locally
-    model_path = os.path.join(
+    pipeline_path = os.path.join(
         LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY, f"{timestamp}.pkl")
-    pickle.dump(pipeline, open(model_path, 'wb'))
+    pickle.dump(pipeline, open(pipeline_path, 'wb'))
 
     print("✅ Pipeline saved locally")
+
+    pipeline_target = get_pipeline_target()
+
+    if pipeline_target == PipelineTarget.gcs:
+        # e.g. "20230208-161047.pkl" for instance
+        pipeline_filename = pipeline_path.split("/")[-1]
+        client = storage.Client()
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob(f"{PIPELINE_DIRECTORY}/{pipeline_filename}")
+        blob.upload_from_filename(pipeline_path)
+
+        print("✅ Pipeline saved to GCS")
+
+        return None
 
     return None
 

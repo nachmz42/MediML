@@ -2,7 +2,7 @@ raw_data/
 
 # System files
 .DS_Store
-.ipynb_checkpoints
+notebooks/.ipynb_checkpoints/
 *.pyc
 *.swp
 build/
@@ -11,3 +11,6 @@ dist/
 *.iml
 *.egg-info
 *.vscode
+
+# Environments
+.env

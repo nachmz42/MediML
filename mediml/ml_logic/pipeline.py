@@ -16,12 +16,13 @@ def build_pipeline() -> Pipeline:
     # Impute then scale numerical values
     num_transformer = make_pipeline(
         SimpleImputer(strategy="mean"), StandardScaler())
-    num_col = make_column_selector(dtype_include=['float64'])
+    num_col = make_column_selector(dtype_include=['float64'])  # type: ignore
 
     # Encode categorical values
     cat_transformer = OneHotEncoder(handle_unknown='ignore')
     # Add int64 in categorical values to include `heart_disease` and `hypertension`
-    cat_col = make_column_selector(dtype_include=['object', 'bool', 'int64'])
+    cat_col = make_column_selector(
+        dtype_include=['object', 'bool', 'int64'])  # type: ignore
 
     # Parallelize "num_transformer" and "cat_transfomer"
     preprocessor = make_column_transformer(
