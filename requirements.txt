@@ -13,3 +13,5 @@ scipy
 imblearn
 scikit-learn
 pytest
+# GCP
+google-cloud-storage

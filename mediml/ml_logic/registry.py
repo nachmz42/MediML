@@ -4,9 +4,11 @@ import pickle
 import time
 
 from colorama import Fore, Style
+from google.cloud import storage
 from imblearn.pipeline import Pipeline
 
-from mediml.params import LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY
+from mediml.params import (BUCKET_NAME, LOCAL_REGISTRY_PATH, MODEL_TARGET,
+                           PIPELINE_DIRECTORY)
 
 
 def load_pipeline() -> Pipeline:
@@ -47,18 +49,31 @@ def load_pipeline() -> Pipeline:
 
 def save_pipeline(pipeline: Pipeline) -> None:
     """
-    Persist trained pipeline locally on the hard drive at
-    f"{LOCAL_REGISTRY_PATH}/pipelines/{timestamp}.pkl"
+    Persist trained pipeline
+    - Locally at "{LOCAL_REGISTRY_PATH}/pipelines/{current_timestamp}.pkl"
+    - on GCS at "{BUCKET_NAME}/pipelines/{current_timestamp}.pkl"
     """
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")  # e.g. 20210824-154952
 
     # Save pipeline locally
-    model_path = os.path.join(
+    pipeline_path = os.path.join(
         LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY, f"{timestamp}.pkl")
-    pickle.dump(pipeline, open(model_path, 'wb'))
+    pickle.dump(pipeline, open(pipeline_path, 'wb'))
 
     print("✅ Pipeline saved locally")
+
+    if MODEL_TARGET == "gcs":
+        # e.g. "20230208-161047.pkl" for instance
+        pipeline_filename = pipeline_path.split("/")[-1]
+        client = storage.Client()
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob(f"{PIPELINE_DIRECTORY}/{pipeline_filename}")
+        blob.upload_from_filename(pipeline_path)
+
+        print("✅ Pipeline saved to GCS")
+
+        return None
 
     return None
 
