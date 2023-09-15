@@ -52,7 +52,7 @@ def preprocess_train_and_evaluate() -> None:
     save_results(metrics={"accuracy": acurracy})
 
 
-def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
+def pred(X_pred: pd.DataFrame | None = None) -> list:
     '''
     - Load latest pipeline from local registry
     - Make predictions on new data

@@ -80,7 +80,7 @@ def evaluate() -> None:
     save_results(metrics={"accuracy": acurracy})
 
 
-def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
+def pred(X_pred: pd.DataFrame | None = None) -> list:
     '''
     - Load latest pipeline
     - Make predictions on new data
