@@ -11,40 +11,69 @@ from mediml.params import (BUCKET_NAME, LOCAL_REGISTRY_PATH, MODEL_TARGET,
                            PIPELINE_DIRECTORY)
 
 
-def load_pipeline() -> Pipeline:
+def load_pipeline() -> Pipeline | None:
     """
     Return a saved pipeline:
-    - locally (latest one in alphabetical order)
-
-    Raise FileNotFoundError if no pipeline is found
+    - locally (latest one in alphabetical order), raise FileNotFoundError if no pipeline is found
+    - on GCS (latest one by timestamp), raise Exception if no pipeline is found
     """
 
-    print(Fore.BLUE + f"\nLoad latest pipeline from local registry..."
-          + Style.RESET_ALL)
-
-    # Get the latest pipeline version name by the timestamp on disk
-    local_pipeline_directory = os.path.join(
-        LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY)
-    local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
-
-    if not local_pipeline_paths:
-        print(Fore.YELLOW +
-              f"⚠️ No pipeline found in {local_pipeline_directory}"
+    if MODEL_TARGET == "local":
+        print(Fore.BLUE + f"\nLoad latest pipeline from local registry..."
               + Style.RESET_ALL)
-        raise FileNotFoundError
 
-    most_recent_pipeline_path_on_disk = sorted(local_pipeline_paths)[-1]
+        # Get the latest pipeline version name by the timestamp on disk
+        local_pipeline_directory = os.path.join(
+            LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY)
+        local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
 
-    print(f"✅ Pipeline found at {most_recent_pipeline_path_on_disk}")
+        if not local_pipeline_paths:
+            print(Fore.YELLOW +
+                  f"⚠️ No pipeline found in {local_pipeline_directory}"
+                  + Style.RESET_ALL)
+            raise FileNotFoundError
 
-    print(Fore.BLUE + f"\nLoad latest pipeline from disk..." + Style.RESET_ALL)
+        most_recent_pipeline_path_on_disk = sorted(local_pipeline_paths)[-1]
 
-    latest_pipeline = pickle.load(
-        open(most_recent_pipeline_path_on_disk, "rb"))
+        print(f"✅ Pipeline found at {most_recent_pipeline_path_on_disk}")
 
-    print("✅ Pipeline loaded from local disk")
+        print(Fore.BLUE + f"\nLoad latest pipeline from disk..." + Style.RESET_ALL)
 
-    return latest_pipeline
+        latest_pipeline = pickle.load(
+            open(most_recent_pipeline_path_on_disk, "rb"))
+
+        print("✅ Pipeline loaded from local disk")
+
+        return latest_pipeline
+
+    if MODEL_TARGET == "gcs":
+        print(Fore.BLUE + f"\nLoad latest pipeline from GCS..." + Style.RESET_ALL)
+
+        client = storage.Client()
+        blobs = list(client.get_bucket(
+            BUCKET_NAME).list_blobs(prefix=PIPELINE_DIRECTORY))
+
+        try:
+            latest_blob = max(blobs, key=lambda x: x.updated)
+            latest_pipeline_path_to_save = os.path.join(
+                LOCAL_REGISTRY_PATH, latest_blob.name)
+            latest_blob.download_to_filename(latest_pipeline_path_to_save)
+
+            latest_pipeline = pickle.load(
+                open(latest_pipeline_path_to_save, "rb"))
+
+            print(f"✅ Latest pipeline found at {latest_pipeline_path_to_save}")
+
+            print("✅ Latest pipeline downloaded from cloud storage")
+
+            return latest_pipeline
+        except:
+            print(f"\n❌ No pipeline found in GCS bucket {BUCKET_NAME}")
+            raise Exception("No pipeline found in GCS bucket")
+
+    print(Fore.YELLOW + f"\n No model target specified" + Style.RESET_ALL)
+
+    return None
 
 
 def save_pipeline(pipeline: Pipeline) -> None:
