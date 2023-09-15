@@ -1,5 +1,10 @@
 import os
 
+##################  VARIABLES  ##################
+MODEL_TARGET = os.environ.get("MODEL_TARGET")
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
+
+
 ##################  CONSTANTS  #####################
 LOCAL_DATA_PATH = os.path.join(
     os.path.expanduser('~'), ".mediml", "mlops", "data")
