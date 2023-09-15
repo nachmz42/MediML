@@ -1,4 +1,15 @@
-python==3.11.3
 jupyter
 ipykernel
 notebook
+colorama
+ipdb
+matplotlib
+pickle
+seaborn
+numpy
+pandas
+scipy
+# To balance classes with SMOTE
+imblearn
+scikit-learn
+pytest
