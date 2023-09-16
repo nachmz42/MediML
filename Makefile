@@ -54,7 +54,7 @@ tests_all: tests_ml_logic
 
 copy_app_to_compute_engine:
 	@echo "Copying app to compute engine"
-	@gcloud compute scp --recurse . $USER@${VM_NAME}:~/mediml-project
+	@gcloud compute scp --recurse . ${VM_NAME}:~/mediml-project
 
 connect_to_compute_engine:
 	@echo "Connecting to compute engine"
