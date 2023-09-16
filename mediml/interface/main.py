@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 from colorama import Fore, Style
 from sklearn.model_selection import train_test_split
