@@ -1,4 +1,3 @@
-import os
 from enum import Enum
 
 from mediml.params import PIPELINE_TARGET
