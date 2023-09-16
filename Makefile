@@ -27,6 +27,9 @@ run_evaluate:
 
 run_all: run_preprocess_and_train run_pred run_evaluate
 
+run_api:
+	uvicorn mediml.api.fast:app --reload
+
 
 ################### DATA SOURCES ACTIONS ################
 
