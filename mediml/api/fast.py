@@ -14,5 +14,5 @@ app.add_middleware(
 
 
 @app.get('/')
-def index():
+def index() -> dict:
     return {'ok': True}
