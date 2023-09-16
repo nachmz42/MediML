@@ -20,3 +20,5 @@ db-dtypes # For BigQuery to convert pandas dtypes to BigQuery dtypes
 fastapi
 uvicorn
 pydantic
+# dotenv
+python-dotenv

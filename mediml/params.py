@@ -1,12 +1,17 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 ##################  VARIABLES  ##################
-PIPELINE_TARGET = os.environ.get("PIPELINE_TARGET")
-BUCKET_NAME = os.environ.get("BUCKET_NAME")
-PROJECT = os.environ.get("PROJECT")
-DATASET = os.environ.get("DATASET")
-TABLE = os.environ.get("TABLE")
+PIPELINE_TARGET = os.getenv("PIPELINE_TARGET")
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+PROJECT = os.getenv("PROJECT")
+DATASET = os.getenv("DATASET")
+TABLE = os.getenv("TABLE")
 
 
 ##################  CONSTANTS  #####################
