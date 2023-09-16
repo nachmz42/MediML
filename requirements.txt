@@ -4,7 +4,6 @@ notebook
 colorama
 ipdb
 matplotlib
-pickle
 seaborn
 numpy
 pandas
