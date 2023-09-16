@@ -19,3 +19,4 @@ db-dtypes # For BigQuery to convert pandas dtypes to BigQuery dtypes
 # API
 fastapi
 uvicorn
+pydantic
