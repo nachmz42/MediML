@@ -14,3 +14,4 @@ dist/
 
 # Environments
 .env
+gcp-creds.json

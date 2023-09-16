@@ -1,0 +1,16 @@
+colorama
+numpy
+pandas
+# To balance classes with SMOTE
+imblearn
+scikit-learn
+# GCP
+google-cloud-storage
+google-cloud-bigquery
+db-dtypes # For BigQuery to convert pandas dtypes to BigQuery dtypes
+# API
+fastapi
+uvicorn
+pydantic
+# dotenv
+python-dotenv

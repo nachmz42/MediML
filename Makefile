@@ -62,3 +62,39 @@ copy_app_to_compute_engine:
 connect_to_compute_engine:
 	@echo "Connecting to compute engine"
 	@gcloud compute ssh ${VM_NAME}
+
+################### DOCKER ####################
+TAG = latest # default TAG
+DOCKER_GCP_IMAGE_FULL_NAME = ${GCP_MULTI_REGION}-docker.pkg.dev/${PROJECT}/${GCP_REGISTRY}/${DOCKER_GCP_IMAGE_NAME}
+
+build_docker_image_local:
+	@echo "Building docker image"
+	@docker build -t ${DOCKER_LOCAL_IMAGE_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} .
+
+build_docker_image_gcp:
+	@echo "Building docker image for GCP"
+	@docker build --platform linux/amd64 -t ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} .
+
+run_docker_api_local:
+	@echo "Running docker api image locally"
+	@docker run -it -e PORT=8000 -p 8000:8000 ${DOCKER_LOCAL_IMAGE_NAME}:$(TAG)
+
+run_docker_api_gcp:
+	@echo "Running docker api image to test GCP deployment"
+	@docker run -it -e PORT=8000 -p 8000:8000 ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG)
+
+run_docker_shell_local:
+	@echo "Running docker image shell locally"
+	@docker run -it ${DOCKER_LOCAL_IMAGE_NAME}:$(TAG) sh
+
+run_docker_shell_gcp:
+	@echo "Running docker image shell to test GCP deployment"
+	@docker run -it ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) sh
+
+push_docker_image_gcp:
+	@echo "Pushing docker image to GCP"
+	@docker push ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG)
+
+deploy_docker_image_gcp:
+	@echo "Deploying docker image to Cloud Run"
+	@gcloud run deploy ${GCP_SERVICE_NAME} --image ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) --platform managed --region ${GCP_LOCAL_REGION}
