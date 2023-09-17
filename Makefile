@@ -34,17 +34,15 @@ run_api:
 ################### DATA SOURCES ACTIONS ################
 
 # Data sources
-ML_DIR=~/.mediml/mlops
-
 reset_local_files:
-	rm -rf ${ML_DIR}
-	mkdir -p ${ML_DIR}/data/
-	mkdir ${ML_DIR}/data/raw
-	mkdir ${ML_DIR}/data/processed
-	mkdir ${ML_DIR}/training_outputs
-	mkdir ${ML_DIR}/training_outputs/metrics
-	mkdir ${ML_DIR}/training_outputs/pipelines
-	mkdir ${ML_DIR}/training_outputs/params
+	rm -rf ${LOCAL_MLOPS_DIRECTORY}
+	mkdir -p ${LOCAL_MLOPS_DIRECTORY}/data/
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/data/raw
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/data/processed
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/metrics
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/pipelines
+	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/params
 
 ################### TESTS ####################
 

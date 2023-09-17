@@ -24,7 +24,7 @@ def load_data() -> pd.DataFrame:
                   + Style.RESET_ALL)
 
             # Load raw data from local repository
-            data_exists = LOCAL_DATA_PATH.is_file()
+            data_exists = Path(LOCAL_DATA_PATH).is_file()
 
             if not data_exists:
                 print(Fore.YELLOW +
@@ -40,7 +40,7 @@ def load_data() -> pd.DataFrame:
             """
 
             # Retrieve `query` data from BigQuery or from `data_query_cache_path` if the file already exists!
-            data_query_cached_exists = LOCAL_DATA_PATH.is_file()
+            data_query_cached_exists = Path(LOCAL_DATA_PATH).is_file()
 
             if data_query_cached_exists:
                 print("Loading data from local CSV...")

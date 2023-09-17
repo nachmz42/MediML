@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from mediml.ml_logic.data import load_data
 from mediml.ml_logic.pipeline import build_pipeline
 from mediml.ml_logic.registry import load_pipeline, save_pipeline, save_results
-from mediml.params import COLUMN_NAMES_RAW
+from mediml.params import COLUMN_NAMES_RAW, LOCAL_DATA_PATH
 
 
 def preprocess_and_train() -> None:
@@ -51,15 +51,14 @@ def evaluate() -> None:
     print(Fore.MAGENTA + "\n⭐️ Use case: evaluate" + Style.RESET_ALL)
 
     # Load raw data from local repository
-    data_path = Path("raw_data/healthcare-dataset-stroke-data.csv")
-    data_exists = data_path.is_file()
+    data_exists = Path(LOCAL_DATA_PATH).is_file()
 
     if not data_exists:
         print(Fore.YELLOW +
               f"⏳ Downloading data from https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset" + Style.RESET_ALL)
         return None
 
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(Path(LOCAL_DATA_PATH))
 
     # Make sure the id column is the index of the dataframe
     df.set_index('id', inplace=True)

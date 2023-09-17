@@ -8,6 +8,7 @@ RUN pip install -r requirements.txt
 
 ARG GCP_CREDENTIALS_PATH
 ARG BUCKET_NAME
+ARG LOCAL_MLOPS_DIRECTORY
 
 # Copy GCP credentials to the container
 COPY $GCP_CREDENTIALS_PATH gcp-creds.json
@@ -16,6 +17,7 @@ COPY $GCP_CREDENTIALS_PATH gcp-creds.json
 ENV GOOGLE_APPLICATION_CREDENTIALS=/prod/gcp-creds.json
 ENV BUCKET_NAME=$BUCKET_NAME
 ENV PIPELINE_TARGET="gcs"
+ENV LOCAL_MLOPS_DIRECTORY=$LOCAL_MLOPS_DIRECTORY
 
 COPY mediml mediml
 COPY setup.py setup.py

@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -12,12 +11,14 @@ BUCKET_NAME = os.getenv("BUCKET_NAME")
 PROJECT = os.getenv("PROJECT")
 DATASET = os.getenv("DATASET")
 TABLE = os.getenv("TABLE")
+LOCAL_MLOPS_DIRECTORY = os.getenv("LOCAL_MLOPS_DIRECTORY") or ".mlops"
 
 
 ##################  CONSTANTS  #####################
-LOCAL_DATA_PATH = Path("raw_data/healthcare-dataset-stroke-data.csv")
-LOCAL_REGISTRY_PATH = os.path.join(os.path.expanduser(
-    '~'), ".mediml", "mlops", "training_outputs")
+LOCAL_DATA_PATH = os.path.join(
+    LOCAL_MLOPS_DIRECTORY, "data", "raw", "healthcare-dataset-stroke-data.csv")
+LOCAL_TRAINING_OUTPUTS_PATH = os.path.join(
+    LOCAL_MLOPS_DIRECTORY, "training_outputs")
 PIPELINE_DIRECTORY = "pipelines"
 
 COLUMN_NAMES_RAW = ['gender',
