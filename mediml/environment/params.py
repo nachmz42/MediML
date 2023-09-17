@@ -3,7 +3,13 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(dotenv_path=".env")
+
+ENVIRONMENT = os.getenv("ENVIRONMENT") or "development"
+
+# Load variables according to environment (development, production)
+load_dotenv(dotenv_path=f".env.{ENVIRONMENT}")
+
 
 ##################  VARIABLES  ##################
 PIPELINE_TARGET = os.getenv("PIPELINE_TARGET")

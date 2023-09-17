@@ -1,6 +1,6 @@
 from enum import Enum
 
-from mediml.params import PIPELINE_TARGET
+from mediml.environment.params import PIPELINE_TARGET
 
 
 class PipelineTarget(Enum):

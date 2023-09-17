@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 from google.cloud import bigquery
 
-from mediml.params import DATASET, LOCAL_DATA_PATH, PROJECT, TABLE
+from mediml.environment.params import DATASET, LOCAL_DATA_PATH, PROJECT, TABLE
 
 
 def load_data() -> pd.DataFrame:

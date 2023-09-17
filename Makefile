@@ -65,13 +65,15 @@ connect_to_compute_engine:
 TAG = latest # default TAG
 DOCKER_GCP_IMAGE_FULL_NAME = ${GCP_MULTI_REGION}-docker.pkg.dev/${PROJECT}/${GCP_REGISTRY}/${DOCKER_GCP_IMAGE_NAME}
 
+# Make sure to set the environment variables in .env to `development` before running this command
 build_docker_image_local:
 	@echo "Building docker image"
-	@docker build -t ${DOCKER_LOCAL_IMAGE_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} .
+	@docker build -t ${DOCKER_LOCAL_IMAGE_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} --build-arg LOCAL_MLOPS_DIRECTORY=${LOCAL_MLOPS_DIRECTORY} .
 
+# Make sure to set the environment variables in .env to `production` before running this command
 build_docker_image_gcp:
 	@echo "Building docker image for GCP"
-	@docker build --platform linux/amd64 -t ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} .
+	@docker build --platform linux/amd64 -t ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) --build-arg GCP_CREDENTIALS_PATH=gcp-creds.json --build-arg BUCKET_NAME=${BUCKET_NAME} --build-arg LOCAL_MLOPS_DIRECTORY=${LOCAL_MLOPS_DIRECTORY} .
 
 run_docker_api_local:
 	@echo "Running docker api image locally"

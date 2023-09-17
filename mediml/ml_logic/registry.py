@@ -7,9 +7,11 @@ from colorama import Fore, Style
 from google.cloud import storage
 from imblearn.pipeline import Pipeline
 
-from mediml.environments import PipelineTarget, get_pipeline_target
-from mediml.params import (BUCKET_NAME, LOCAL_TRAINING_OUTPUTS_PATH,
-                           PIPELINE_DIRECTORY)
+from mediml.environment.params import (BUCKET_NAME,
+                                       LOCAL_TRAINING_OUTPUTS_PATH,
+                                       PIPELINE_DIRECTORY)
+from mediml.environment.pipeline_target import (PipelineTarget,
+                                                get_pipeline_target)
 
 
 def load_pipeline() -> Pipeline:

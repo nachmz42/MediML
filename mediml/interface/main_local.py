@@ -5,10 +5,10 @@ import pandas as pd
 from colorama import Fore, Style
 from sklearn.model_selection import train_test_split
 
+from mediml.environment.params import COLUMN_NAMES_RAW
 from mediml.ml_logic.data import load_data
 from mediml.ml_logic.pipeline import build_pipeline
 from mediml.ml_logic.registry import load_pipeline, save_pipeline, save_results
-from mediml.params import COLUMN_NAMES_RAW
 
 
 def preprocess_train_and_evaluate() -> None:
