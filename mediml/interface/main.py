@@ -51,12 +51,7 @@ def evaluate() -> None:
     print(Fore.MAGENTA + "\n⭐️ Use case: evaluate" + Style.RESET_ALL)
 
     # Load raw data from local repository
-    data_exists = Path(LOCAL_DATA_PATH).is_file()
-
-    if not data_exists:
-        print(Fore.YELLOW +
-              f"⏳ Downloading data from https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset" + Style.RESET_ALL)
-        return None
+    df = load_data()
 
     df = pd.read_csv(Path(LOCAL_DATA_PATH))
 
