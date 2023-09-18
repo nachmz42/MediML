@@ -51,7 +51,7 @@ tests_ml_logic:
 
 tests_all: tests_ml_logic
 
-################### GCP ####################
+################### GCP COMPUTE ENGINE ####################
 
 copy_app_to_compute_engine:
 	@echo "Copying app to compute engine"
@@ -95,6 +95,18 @@ push_docker_image_gcp:
 	@echo "Pushing docker image to GCP"
 	@docker push ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG)
 
+################### DEPLOY ####################
+
 deploy_docker_image_gcp:
 	@echo "Deploying docker image to Cloud Run"
 	@gcloud run deploy ${GCP_SERVICE_NAME} --image ${DOCKER_GCP_IMAGE_FULL_NAME}:$(TAG) --platform managed --region ${GCP_LOCAL_REGION}
+
+################### FIREBASE HOSTING ####################
+
+build_firebase_config_file:
+	@echo "Building firebase config file"
+	@python build_firebase_config.py
+
+deploy_firebase_hosting:
+	@echo "Deploying firebase hosting"
+	@firebase deploy --only hosting --project ${PROJECT}

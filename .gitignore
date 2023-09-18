@@ -16,3 +16,4 @@ dist/
 .env
 .env.*
 gcp-creds.json
+firebase.json
