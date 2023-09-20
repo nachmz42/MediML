@@ -7,8 +7,11 @@ from colorama import Fore, Style
 from google.cloud import storage
 from imblearn.pipeline import Pipeline
 
-from mediml.environments import PipelineTarget, get_pipeline_target
-from mediml.params import BUCKET_NAME, LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY
+from mediml.environment.params import (BUCKET_NAME,
+                                       LOCAL_TRAINING_OUTPUTS_PATH,
+                                       PIPELINE_DIRECTORY)
+from mediml.environment.pipeline_target import (PipelineTarget,
+                                                get_pipeline_target)
 
 
 def load_pipeline() -> Pipeline:
@@ -27,7 +30,7 @@ def load_pipeline() -> Pipeline:
 
             # Get the latest pipeline version name by the timestamp on disk
             local_pipeline_directory = os.path.join(
-                LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY)
+                LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY)
             local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
 
             if not local_pipeline_paths:
@@ -60,7 +63,7 @@ def load_pipeline() -> Pipeline:
             try:
                 latest_blob = max(blobs, key=lambda x: x.updated)
                 latest_pipeline_path_to_save = os.path.join(
-                    LOCAL_REGISTRY_PATH, latest_blob.name)
+                    LOCAL_TRAINING_OUTPUTS_PATH, latest_blob.name)
                 latest_blob.download_to_filename(latest_pipeline_path_to_save)
 
                 latest_pipeline = pickle.load(
@@ -92,7 +95,7 @@ def save_pipeline(pipeline: Pipeline) -> None:
 
     # Save pipeline locally
     pipeline_path = os.path.join(
-        LOCAL_REGISTRY_PATH, PIPELINE_DIRECTORY, f"{timestamp}.pkl")
+        LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY, f"{timestamp}.pkl")
     pickle.dump(pipeline, open(pipeline_path, 'wb'))
 
     print("✅ Pipeline saved locally")
@@ -124,7 +127,7 @@ def save_results(metrics: dict) -> None:
     # Save metrics locally
     if metrics is not None:
         metrics_path = os.path.join(
-            LOCAL_REGISTRY_PATH, "metrics", timestamp + ".pickle")
+            LOCAL_TRAINING_OUTPUTS_PATH, "metrics", timestamp + ".pickle")
         with open(metrics_path, "wb") as file:
             pickle.dump(metrics, file)
 

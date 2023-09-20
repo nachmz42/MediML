@@ -1,0 +1,32 @@
+# Exclude common Python development and build artifacts
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.db
+
+# Exclude version control files and directories
+.git/
+.gitignore
+
+# Exclude system and temporary files
+*.DS_Store
+*.swp
+*~
+__MACOSX/
+
+# Exclude Python virtual environment and dependencies
+*.egg-info/
+*.egg/
+dist/
+build/
+.pip-cache/
+*.log
+
+# Exclude local development configuration
+.env*
+
+# Exclude IDE and editor-specific files
+.idea/
+.vscode/
+*.sublime-*
