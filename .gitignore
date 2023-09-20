@@ -1,1 +1,16 @@
 raw_data/
+
+# System files
+.DS_Store
+notebooks/.ipynb_checkpoints/
+*.pyc
+*.swp
+build/
+dist/
+.coverage
+*.iml
+*.egg-info
+*.vscode
+
+# Environments
+.env
