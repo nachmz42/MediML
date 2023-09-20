@@ -7,6 +7,8 @@ class WorkType(str, Enum):
     children = "children"
     govt_jov = "Govt_jov"
     never_worked = "Never_worked"
+    private = "Private"
+    self_employed = "Self-employed"
 
 
 class ResidenceType(str, Enum):
