@@ -110,3 +110,13 @@ build_firebase_config_file:
 deploy_firebase_hosting:
 	@echo "Deploying firebase hosting"
 	@firebase deploy --only hosting --project ${PROJECT}
+
+
+run_preprocess_and_train_cardiovascular:
+	python -c 'from cardiovascular.interface.main import preprocess_and_train; preprocess_and_train()'
+
+run_pred_cardiovascular:
+	python -c 'from cardiovascular.interface.main import pred; pred()'
+
+run_evaluate_cardiovascular:
+	python -c 'from cardiovascular.interface.main import evaluate; evaluate()'

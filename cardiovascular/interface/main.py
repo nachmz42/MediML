@@ -1,10 +1,11 @@
-from data import load_data
+
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
-from pipeline import build_pipeline
 from colorama import Fore, Style
-
+from cardiovascular.ml_logic.registry import load_pipeline, save_pipeline, save_results
+from cardiovascular.ml_logic.pipeline import build_pipeline
+from cardiovascular.ml_logic.data import load_data
 
 def age_process(x):
     '''
@@ -17,8 +18,8 @@ def age_process(x):
     else:
         return 'old'
 
-def preprocess_and_train():
-    data = load_data()
+def preprocess(data):
+    print(f"✅ Starting the preprocessing of the cardiovascular data")
     data.drop_duplicates(inplace=True)
 
     data['age_category'] = data['Age_Category'].map(lambda x : age_process(x))
@@ -26,39 +27,39 @@ def preprocess_and_train():
 
 
     data.drop_duplicates(inplace=True)
-
-    data['age_category'] = data['Age_Category'].map(lambda x : age_process(x))
-    data.drop(columns=['Age_Category', 'Checkup', 'BMI'], inplace=True)
 
     X = data.drop(columns=['Heart_Disease'],axis=1)
     y = data[['Heart_Disease']]
-    y_encoded =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
-    X_train, _, y_train, _ = train_test_split(X,  # independent variables
-                                              y_encoded,  # dependent variable
-                                              test_size=0.2)
-    # Build pipeline
-    pipeline = build_pipeline()
+    y =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
 
-    # Fit pipeline
+    print(f"✅ Ending the preprocessing of the cardiovascular data")
+
+    return X, y
+
+def preprocess_and_train():
+    print(f"✅ Starting the training of the cardiovascular model")
+    data = load_data()
+    X,y = preprocess(data)
+    X_train, _, y_train, _ = train_test_split(X,
+                                              y,
+                                              test_size=0.2)
+    pipeline = build_pipeline()
     pipeline.fit(X_train, y_train)
-    return pipeline
+    save_pipeline(pipeline)
+    print(f"✅ Cardiovascular model trained")
 
 def evaluate():
-
+    print(f"✅ Starting the evaluation of the cardiovascular model")
     data = load_data()
-    X = data.drop(columns=['Heart_Disease'],axis=1)
-    y = data[['Heart_Disease']]
-    y_encoded =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
-
-    pipeline = build_pipeline()
-    # Score model - accuracy
-    accuracy = pipeline.score(X, y_encoded)
+    pipeline = load_pipeline()
+    X,y = preprocess(data)
+    accuracy = pipeline.score(X, y)
     print(f"✅ Model acurracy: {accuracy}")
 
 def pred(X_pred: pd.DataFrame | None = None)->list:
 
     print(Fore.MAGENTA + "\n ⭐️ Use case: pred" + Style.RESET_ALL)
-    pipeline = preprocess_and_train()
+    pipeline = load_pipeline()
     return pipeline.predict(X_pred)
 
 
