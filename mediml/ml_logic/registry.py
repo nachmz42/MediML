@@ -32,6 +32,7 @@ def load_pipeline() -> Pipeline:
             local_pipeline_directory = os.path.join(
                 LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY)
             local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
+            
 
             if not local_pipeline_paths:
                 print(Fore.YELLOW +

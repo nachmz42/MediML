@@ -22,18 +22,26 @@ LOCAL_MLOPS_DIRECTORY = os.getenv("LOCAL_MLOPS_DIRECTORY") or ".mlops"
 
 ##################  CONSTANTS  #####################
 LOCAL_DATA_PATH = os.path.join(
-    LOCAL_MLOPS_DIRECTORY, "data", "raw", "healthcare-dataset-stroke-data.csv")
+    LOCAL_MLOPS_DIRECTORY, "data", "raw", "CVD_cleaned.csv")
 LOCAL_TRAINING_OUTPUTS_PATH = os.path.join(
     LOCAL_MLOPS_DIRECTORY, "training_outputs")
 PIPELINE_DIRECTORY = "pipelines"
 
-COLUMN_NAMES_RAW = ['gender',
-                    'age',
-                    'hypertension',
-                    'heart_disease',
-                    'ever_married',
-                    'work_type',
-                    'Residence_type',
-                    'avg_glucose_level',
-                    'bmi',
-                    'smoking_status']
+COLUMN_NAMES_RAW = ['General_Health',
+                   'Checkup',
+                   'Exercise',
+                   'Skin_Cancer',
+                   'Other_Cancer',
+                   'Depression',
+                   'Diabetes',
+                   'Arthritis',
+                   'Sex',
+                   'Age_Category',
+                   'Height_(cm)',
+                   'Weight_(kg)',
+                   'BMI',
+                   'Smoking_History',
+                   'Alcohol_Consumption',
+                   'Fruit_Consumption',
+                   'Green_Vegetables_Consumption',
+                   'FriedPotato_Consumption']
