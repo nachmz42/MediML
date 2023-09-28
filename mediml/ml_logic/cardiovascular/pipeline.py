@@ -14,7 +14,7 @@ def build_pipeline():
     '''
 
     #Numerical transformer
-    num_columns = make_column_selector(dtype_exclude=['object'])
+    num_columns = make_column_selector(dtype_exclude=['object']) # type: ignore
 
     #Categorical transformer
     General_Health_sorted = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']

@@ -1,4 +1,6 @@
-from cardiovascular.api.models.cardiovascular_patient_dto import CardiovascularPatientDto
+
+from mediml.api.models.cardiovascular.cardiovascular_patient_dto import CardiovascularPatientDto
+
 
 class CardiovascularPatient():
     def __init__(self, patient_data: CardiovascularPatientDto):

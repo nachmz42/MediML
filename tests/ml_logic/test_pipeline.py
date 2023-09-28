@@ -1,4 +1,7 @@
-from mediml.ml_logic.pipeline import build_pipeline
+
+
+
+from mediml.ml_logic.stroke.pipeline import build_pipeline
 
 
 def test_stroke_pipeline_length() -> None:

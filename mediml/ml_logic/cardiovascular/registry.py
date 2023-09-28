@@ -5,11 +5,11 @@ import time
 
 from colorama import Fore, Style
 from google.cloud import storage
-from imblearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline
 
 from mediml.environment.params import (BUCKET_NAME,
                                        LOCAL_TRAINING_OUTPUTS_PATH,
-                                       PIPELINE_DIRECTORY)
+                                       PIPELINE_DIRECTORY_CARDIOVASCULAR)
 from mediml.environment.pipeline_target import (PipelineTarget,
                                                 get_pipeline_target)
 
@@ -30,9 +30,9 @@ def load_pipeline() -> Pipeline:
 
             # Get the latest pipeline version name by the timestamp on disk
             local_pipeline_directory = os.path.join(
-                LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY)
+                LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY_CARDIOVASCULAR)
             local_pipeline_paths = glob.glob(f"{local_pipeline_directory}/*")
-            
+
 
             if not local_pipeline_paths:
                 print(Fore.YELLOW +
@@ -59,7 +59,7 @@ def load_pipeline() -> Pipeline:
 
             client = storage.Client()
             blobs = list(client.get_bucket(
-                BUCKET_NAME).list_blobs(prefix=PIPELINE_DIRECTORY))
+                BUCKET_NAME).list_blobs(prefix=PIPELINE_DIRECTORY_CARDIOVASCULAR))
 
             try:
                 latest_blob = max(blobs, key=lambda x: x.updated)
@@ -96,7 +96,7 @@ def save_pipeline(pipeline: Pipeline) -> None:
 
     # Save pipeline locally
     pipeline_path = os.path.join(
-        LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY, f"{timestamp}.pkl")
+        LOCAL_TRAINING_OUTPUTS_PATH, PIPELINE_DIRECTORY_CARDIOVASCULAR, f"{timestamp}.pkl")
     pickle.dump(pipeline, open(pipeline_path, 'wb'))
 
     print("✅ Pipeline saved locally")
@@ -108,7 +108,7 @@ def save_pipeline(pipeline: Pipeline) -> None:
         pipeline_filename = pipeline_path.split("/")[-1]
         client = storage.Client()
         bucket = client.bucket(BUCKET_NAME)
-        blob = bucket.blob(f"{PIPELINE_DIRECTORY}/{pipeline_filename}")
+        blob = bucket.blob(f"{PIPELINE_DIRECTORY_CARDIOVASCULAR}/{pipeline_filename}")
         blob.upload_from_filename(pipeline_path)
 
         print("✅ Pipeline saved to GCS")

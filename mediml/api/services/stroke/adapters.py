@@ -1,8 +1,8 @@
 import pandas as pd
 
-from mediml.api.models.patient import Patient
-from mediml.api.models.patient_dto import PatientDto, PatientsDto
-from mediml.api.models.stroke_prediction_dto import (StrokePrediction,
+from mediml.api.models.stroke.patient import Patient
+from mediml.api.models.stroke.patient_dto import PatientDto, PatientsDto
+from mediml.api.models.stroke.stroke_prediction_dto import (StrokePrediction,
                                                      stroke_prediction)
 from mediml.environment.params import COLUMN_NAMES_RAW
 

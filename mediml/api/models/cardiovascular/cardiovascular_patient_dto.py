@@ -57,4 +57,4 @@ class CardiovascularPatientDto(BaseModel):
     fried_potato_consumption:float
 
 class CardiovascularPatientsDto(BaseModel):
-    patients = list[CardiovascularPatientDto]
+    patients : list[CardiovascularPatientDto]

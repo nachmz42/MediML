@@ -13,14 +13,14 @@ def load_data() -> pd.DataFrame:
     - From BigQuery otherwise
     '''
 
-    query = f"""       
+    query = f"""
     SELECT *
     FROM {PROJECT}.{DATASET}.{TABLE}
     """
 
     # Retrieve `query` data from BigQuery or from `data_query_cache_path` if the file already exists!
     data_query_cached_exists = Path(LOCAL_DATA_PATH).is_file()
-
+    
     if data_query_cached_exists:
         print("Loading data from local CSV...")
 

@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 from colorama import Fore, Style
-from cardiovascular.ml_logic.registry import load_pipeline, save_pipeline, save_results
-from cardiovascular.ml_logic.pipeline import build_pipeline
-from cardiovascular.ml_logic.data import load_data
+from mediml.environment.params import COLUMN_NAMES_RAW
+from mediml.ml_logic.cardiovascular.registry import load_pipeline, save_pipeline, save_results
+from mediml.ml_logic.cardiovascular.pipeline import build_pipeline
+from mediml.ml_logic.cardiovascular.data import load_data
 
 def age_process(x):
     '''
@@ -56,10 +57,20 @@ def evaluate():
     accuracy = pipeline.score(X, y)
     print(f"✅ Model acurracy: {accuracy}")
 
-def pred(X_pred: pd.DataFrame | None = None)->list:
+def pred(X_pred: pd.DataFrame | None = None):
 
     print(Fore.MAGENTA + "\n ⭐️ Use case: pred" + Style.RESET_ALL)
+
+    if X_pred is None:
+        X_pred = pd.DataFrame([['Male',
+                                80.0, 0, 0,
+                                'Yes', 'Govt_job',
+                                'Urban', 148.72, 28.7,
+                                'never smoked']],
+                              columns=COLUMN_NAMES_RAW)
+
     pipeline = load_pipeline()
+
     return pipeline.predict(X_pred)
 
 
@@ -67,4 +78,4 @@ def pred(X_pred: pd.DataFrame | None = None)->list:
 if __name__ == '__main__':
     preprocess_and_train()
     evaluate()
-    pred()
+    pred(None)

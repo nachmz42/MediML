@@ -5,9 +5,9 @@ from colorama import Fore, Style
 from sklearn.model_selection import train_test_split
 
 from mediml.environment.params import COLUMN_NAMES_RAW, LOCAL_DATA_PATH
-from mediml.ml_logic.data import load_data
-from mediml.ml_logic.pipeline import build_pipeline
-from mediml.ml_logic.registry import load_pipeline, save_pipeline, save_results
+from mediml.ml_logic.stroke.data import load_data
+from mediml.ml_logic.stroke.pipeline import build_pipeline
+from mediml.ml_logic.stroke.registry import load_pipeline, save_pipeline, save_results
 
 
 def preprocess_and_train() -> None:

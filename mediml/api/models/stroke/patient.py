@@ -1,6 +1,7 @@
 
 
-from mediml.api.models.patient_dto import PatientDto
+
+from mediml.api.models.stroke.patient_dto import PatientDto
 
 
 class Patient():
