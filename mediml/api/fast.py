@@ -8,8 +8,10 @@ from mediml.api.models.stroke.stroke_prediction_dto import StrokePredictionsDto
 from mediml.api.services.cardiovascular.adapters import intPredictionsToCardiovascularPredictions, patientsDtoToCardiovascularPatientsDataFrame
 from mediml.api.services.stroke.adapters import (intPredictionsToStrokePredictions,
                                           patientsDtoToPatientsDataFrame)
+from mediml.interface.cardiovascular.main import preprocess
 from mediml.ml_logic.cardiovascular.registry import load_pipeline as load_cardiovascular_pipeline
 from mediml.ml_logic.stroke.registry import load_pipeline as load_stroke_pipeline
+import pandas as pd
 
 
 app = FastAPI()
@@ -40,7 +42,7 @@ def index() -> dict:
 
 
 @app.post('/predict/stroke')
-async def predictStroke(patient_dto: PatientsDto) -> StrokePredictionsDto:
+async def predictStroke(patient_dto: PatientsDto) -> StrokePredictionsDto | None:
     X_pred = patientsDtoToPatientsDataFrame(patient_dto)
 
     pipeline = app.state.pipeline_stroke
@@ -51,15 +53,14 @@ async def predictStroke(patient_dto: PatientsDto) -> StrokePredictionsDto:
     predictions = intPredictionsToStrokePredictions(y_pred)
 
     return StrokePredictionsDto(predictions=predictions)
-
+    return None
 
 @app.post('/predict/cardiovascular')
 async def predictCardiovascular(patient_dto: CardiovascularPatientsDto) -> CardiovascularPredictionsDto:
     X_pred = patientsDtoToCardiovascularPatientsDataFrame(patient_dto)
-
+    X_pred = preprocess(X_pred)
     pipeline = app.state.pipeline_cardiovascular
     assert pipeline is not None
-
     y_pred = pipeline.predict(X_pred)
 
     predictions = intPredictionsToCardiovascularPredictions(y_pred)

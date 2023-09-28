@@ -4,8 +4,6 @@ from mediml.api.models.cardiovascular.cardiovascular_patient_dto import Cardiova
 
 class CardiovascularPatient():
     def __init__(self, patient_data: CardiovascularPatientDto):
-        self.age = patient_data.age
-        self.gender = patient_data.gender
         self.general_health = patient_data.general_health
         self.checkup = patient_data.checkup
         self.exercise = "Yes" if patient_data.exercise else "No"
@@ -14,10 +12,12 @@ class CardiovascularPatient():
         self.depression = "Yes" if patient_data.depression else "No"
         self.diabetes = "Yes" if patient_data.diabetes else "No"
         self.arthritis = "Yes" if patient_data.arthritis else "No"
-        self.smoking = "Yes" if patient_data.smoking else "No"
-        self.bmi = patient_data.bmi
+        self.gender = patient_data.gender
+        self.age = patient_data.age
         self.height = patient_data.height
         self.weight = patient_data.weight
+        self.bmi = patient_data.bmi
+        self.smoking = "Yes" if patient_data.smoking else "No"
         self.alcohol_consumption = patient_data.alcohol_consumption
         self.fruit_consumption = patient_data.fruit_consumption
         self.green_vegetable_consumption = patient_data.green_vegetable_consumption

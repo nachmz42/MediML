@@ -21,26 +21,23 @@ def age_process(x):
 
 def preprocess(data):
     print(f"✅ Starting the preprocessing of the cardiovascular data")
-    data.drop_duplicates(inplace=True)
-
     data['age_category'] = data['Age_Category'].map(lambda x : age_process(x))
     data.drop(columns=['Age_Category', 'Checkup', 'BMI'], inplace=True)
 
 
-    data.drop_duplicates(inplace=True)
-
-    X = data.drop(columns=['Heart_Disease'],axis=1)
-    y = data[['Heart_Disease']]
-    y =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
 
     print(f"✅ Ending the preprocessing of the cardiovascular data")
 
-    return X, y
+    return data
 
 def preprocess_and_train():
     print(f"✅ Starting the training of the cardiovascular model")
     data = load_data()
-    X,y = preprocess(data)
+    data = preprocess(data)
+    data.drop_duplicates(inplace=True)
+    X = data.drop(columns=['Heart_Disease'],axis=1)
+    y = data[['Heart_Disease']]
+    y =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
     X_train, _, y_train, _ = train_test_split(X,
                                               y,
                                               test_size=0.2)
@@ -53,7 +50,10 @@ def evaluate():
     print(f"✅ Starting the evaluation of the cardiovascular model")
     data = load_data()
     pipeline = load_pipeline()
-    X,y = preprocess(data)
+    data = preprocess(data)
+    X = data.drop(columns=['Heart_Disease'],axis=1)
+    y = data[['Heart_Disease']]
+    y =  OneHotEncoder(drop='if_binary', sparse=False, handle_unknown='ignore').fit_transform(y)
     accuracy = pipeline.score(X, y)
     print(f"✅ Model acurracy: {accuracy}")
 

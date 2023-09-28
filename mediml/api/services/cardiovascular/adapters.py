@@ -11,9 +11,10 @@ def patientsDtoToCardiovascularPatientsDataFrame(patient_dtos: CardiovascularPat
     """
     Converts a list of PatientsDto to a Pandas DataFrame
     """
-    return pd.DataFrame([cardiovascularPatientDtoToPatientDataFrame(patient_dto) for patient_dto in patient_dtos.patients],
-                        columns=COLUMN_NAMES_CARDIOVASCULAR_RAW)
 
+    df =  pd.DataFrame([cardiovascularPatientDtoToPatientDataFrame(patient_dto) for patient_dto in patient_dtos.patients],
+                        columns=COLUMN_NAMES_CARDIOVASCULAR_RAW)
+    return df
 
 def cardiovascularPatientDtoToPatientDataFrame(patient_dto: CardiovascularPatientDto) -> list:
     """
