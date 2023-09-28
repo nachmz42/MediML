@@ -1,11 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from mediml.api.models.cardiovascular.cardiovascular_patient_dto import CardiovascularPatientsDto
+from mediml.api.models.cardiovascular.cardiovascular_prediction_dto import CardiovascularPredictionsDto
 
-from mediml.api.models.patient_dto import PatientsDto
-from mediml.api.models.stroke_prediction_dto import StrokePredictionsDto
-from mediml.api.services.adapters import (intPredictionsToStrokePredictions,
+from mediml.api.models.stroke.patient_dto import PatientsDto
+from mediml.api.models.stroke.stroke_prediction_dto import StrokePredictionsDto
+from mediml.api.services.cardiovascular.adapters import intPredictionsToCardiovascularPredictions, patientsDtoToCardiovascularPatientsDataFrame
+from mediml.api.services.stroke.adapters import (intPredictionsToStrokePredictions,
                                           patientsDtoToPatientsDataFrame)
-from mediml.ml_logic.registry import load_pipeline
+from mediml.interface.cardiovascular.main import preprocess
+from mediml.ml_logic.cardiovascular.registry import load_pipeline as load_cardiovascular_pipeline
+from mediml.ml_logic.stroke.registry import load_pipeline as load_stroke_pipeline
+import pandas as pd
+
 
 app = FastAPI()
 
@@ -14,7 +21,10 @@ app = FastAPI()
 # The trick is to load the pipeline in memory when the Uvicorn server starts
 # and then store the pipeline in an `app.state.pipeline` global variable, accessible across all routes!
 # This will prove very useful for the Demo Day
-app.state.pipeline = load_pipeline()
+app.state.pipeline_stroke = load_stroke_pipeline()
+app.state.pipeline_cardiovascular = load_cardiovascular_pipeline()
+
+
 
 # Allowing all middleware is optional, but good practice for dev purposes
 app.add_middleware(
@@ -31,11 +41,11 @@ def index() -> dict:
     return {'ok': True}
 
 
-@app.post('/predict')
-async def predict(patient_dto: PatientsDto) -> StrokePredictionsDto:
+@app.post('/predict/stroke')
+async def predictStroke(patient_dto: PatientsDto) -> StrokePredictionsDto | None:
     X_pred = patientsDtoToPatientsDataFrame(patient_dto)
 
-    pipeline = app.state.pipeline
+    pipeline = app.state.pipeline_stroke
     assert pipeline is not None
 
     y_pred = pipeline.predict(X_pred)
@@ -43,3 +53,16 @@ async def predict(patient_dto: PatientsDto) -> StrokePredictionsDto:
     predictions = intPredictionsToStrokePredictions(y_pred)
 
     return StrokePredictionsDto(predictions=predictions)
+    return None
+
+@app.post('/predict/cardiovascular')
+async def predictCardiovascular(patient_dto: CardiovascularPatientsDto) -> CardiovascularPredictionsDto:
+    X_pred = patientsDtoToCardiovascularPatientsDataFrame(patient_dto)
+    X_pred = preprocess(X_pred)
+    pipeline = app.state.pipeline_cardiovascular
+    assert pipeline is not None
+    y_pred = pipeline.predict(X_pred)
+
+    predictions = intPredictionsToCardiovascularPredictions(y_pred)
+
+    return CardiovascularPredictionsDto(predictions=predictions)

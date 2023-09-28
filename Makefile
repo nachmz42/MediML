@@ -17,13 +17,13 @@ clean:
 	@rm -Rf */*.pyc
 
 run_preprocess_and_train:
-	python -c 'from mediml.interface.main import preprocess_and_train; preprocess_and_train()'
+	python -c 'from mediml.interface.stroke.main import preprocess_and_train; preprocess_and_train()'
 
 run_pred:
-	python -c 'from mediml.interface.main import pred; pred()'
+	python -c 'from mediml.interface.stroke.main import pred; pred()'
 
 run_evaluate:
-	python -c 'from mediml.interface.main import evaluate; evaluate()'
+	python -c 'from mediml.interface.stroke.main import evaluate; evaluate()'
 
 run_all: run_preprocess_and_train run_pred run_evaluate
 
@@ -41,7 +41,8 @@ reset_local_files:
 	mkdir ${LOCAL_MLOPS_DIRECTORY}/data/processed
 	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs
 	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/metrics
-	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/pipelines
+	mkdir -p ${LOCAL_MLOPS_DIRECTORY}/training_outputs/pipelines/stroke
+	mkdir -p ${LOCAL_MLOPS_DIRECTORY}/training_outputs/pipelines/cardiovascular
 	mkdir ${LOCAL_MLOPS_DIRECTORY}/training_outputs/params
 
 ################### TESTS ####################
@@ -110,3 +111,13 @@ build_firebase_config_file:
 deploy_firebase_hosting:
 	@echo "Deploying firebase hosting"
 	@firebase deploy --only hosting --project ${PROJECT}
+
+
+run_preprocess_and_train_cardiovascular:
+	python -c 'from mediml.interface.cardiovascular.main import preprocess_and_train; preprocess_and_train()'
+
+run_pred_cardiovascular:
+	python -c 'from mediml.interface.cardiovascular.main import pred; pred()'
+
+run_evaluate_cardiovascular:
+	python -c 'from mediml.interface.cardiovascular.main import evaluate; evaluate()'
