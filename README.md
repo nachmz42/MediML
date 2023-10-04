@@ -24,18 +24,41 @@ To test the model locally, follow these steps:
 make reinstall_package
 ```
 
-2. Create the folders where the models and the metrics will be stored:
+2. Create the `.env` file at the root of the project:
+
+```sh
+LOCAL_MLOPS_DIRECTORY=.mlops
+ENVIRONMENT=development
+```
+
+3. Create the `.env.development` file at the root of the project:
+
+```sh
+PIPELINE_TARGET=local
+```
+
+4. Create the folders where the models and the metrics will be stored:
 
 ```sh
 make reset_local_files
 ```
 
-3. Download the data [Stroke Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset), create a `raw_data` folder and put the CSV file inside. Make sure to call the file `healthcare-dataset-stroke-data.csv`
+5. Download the data [Stroke Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset), and put the CSV file inside the folder `.mlops/data/raw`. Make sure to call the file `healthcare-dataset-stroke-data.csv`
 
-4. Run the following command inside the directory (comment or uncomment the last lines of `main_local.py` whether you want to train the model or to make a prediction)
+6. Run the following command inside the directory to train, evaluate the model or make a prediction:
 
 ```sh
-python mediml/interface/main_local.py  
+# To train the model
+make run_preprocess_and_train
+
+# To evaluate the model
+make run_evaluate
+
+# To make a prediction
+make run_pred
+
+# To run the API
+make run_api
 ```
 
 ## Authors

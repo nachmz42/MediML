@@ -1,4 +1,4 @@
-raw_data/
+.mlops/
 
 # System files
 .DS_Store
@@ -14,3 +14,6 @@ dist/
 
 # Environments
 .env
+.env.*
+gcp-creds.json
+firebase.json

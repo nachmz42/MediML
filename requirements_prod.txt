@@ -1,17 +1,9 @@
-jupyter
-ipykernel
-notebook
 colorama
-ipdb
-matplotlib
-seaborn
 numpy
 pandas
-scipy
 # To balance classes with SMOTE
 imblearn
 scikit-learn
-pytest
 # GCP
 google-cloud-storage
 google-cloud-bigquery
